@@ -28,7 +28,7 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         working-directory: ${{ matrix.app }}
-        run: npm install
+        run: npm ci
 
       # Run linter
       - name: Run linter
