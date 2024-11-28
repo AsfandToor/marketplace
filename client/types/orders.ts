@@ -10,3 +10,10 @@ export type Order = {
     createdAt: string;
     totalPrice: number;
 };
+
+export type OrderMetrics = {
+    totalOrders: number;
+    totalApprovedOrders: number;
+    totalRejectedOrders: number;
+    totalOrdersAmount: number;
+};

@@ -5,8 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { ListingsModule } from './listings/listings.module';
 import { OrdersModule } from './orders/orders.module';
 import { ConfigModule } from '@nestjs/config';
-import { RabbitMQService } from './rabbitmq/rabbitmq.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -15,6 +13,6 @@ import { RabbitMQService } from './rabbitmq/rabbitmq.service';
     OrdersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RabbitMQService],
+  providers: [AppService],
 })
 export class AppModule {}

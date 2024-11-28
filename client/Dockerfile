@@ -4,7 +4,7 @@ WORKDIR /app
 
 FROM base AS dependencies
 COPY package.json ./
-RUN npm install --force
+RUN npm install
 
 FROM base AS builder
 COPY . .

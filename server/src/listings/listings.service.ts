@@ -2,13 +2,13 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Listing, ListingStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateListingDto } from './dto';
-import { RabbitMQService } from '@/rabbitmq/rabbitmq.service';
+import { ProducerService } from '@/rabbitmq/queue.producer';
 
 @Injectable()
 export class ListingsService {
   constructor(
     private prisma: PrismaService,
-    private readonly rabbitmqService: RabbitMQService,
+    private readonly producerService: ProducerService,
   ) {}
 
   async getAllListings(
@@ -95,7 +95,7 @@ export class ListingsService {
     }
 
     try {
-      await this.rabbitmqService.sendListings(listing);
+      await this.producerService.addToListingQueue(listing);
     } catch (error) {
       console.error('Error sending RabbitMQ message: ', error);
       throw new InternalServerErrorException('Error sending RabbitMQ message');
@@ -103,6 +103,21 @@ export class ListingsService {
 
     return listing;
   }
+
+  // async notifyListings() {
+  //   const listings = [];
+  //   try {
+  //     await this.consumerService.onModuleInit('listings.created', (msg) => {
+  //       listings.push(JSON.parse(msg.content.toString()));
+  //     });
+  //     return listings;
+  //   } catch (error) {
+  //     console.error('Error receiving RabbitMQ message: ', error);
+  //     throw new InternalServerErrorException(
+  //       'Error receiving RabbitMQ message',
+  //     );
+  //   }
+  // }
 
   async changeListingStatus(
     id: number,

@@ -126,6 +126,41 @@ export class OrdersService {
     };
   }
 
+  async getOrderMetrics(sellerId: number) {
+    const totalOrders = await this.prisma.order.count({
+      where: { listings: { some: { listing: { sellerId } } } },
+    });
+    const totalApprovedOrders = await this.prisma.order.count({
+      where: {
+        status: OrderStatus.APPROVED,
+        listings: { some: { listing: { sellerId } } },
+      },
+    });
+    const totalOrdersAmount = await this.prisma.order.aggregate({
+      where: {
+        status: OrderStatus.APPROVED,
+        listings: { some: { listing: { sellerId } } },
+      },
+      _sum: {
+        totalPrice: true,
+      },
+    });
+
+    const totalRejectedOrders = await this.prisma.order.count({
+      where: {
+        status: OrderStatus.REJECTED,
+        listings: { some: { listing: { sellerId } } },
+      },
+    });
+
+    return {
+      totalOrders,
+      totalApprovedOrders,
+      totalRejectedOrders,
+      totalOrdersAmount: totalOrdersAmount._sum.totalPrice,
+    };
+  }
+
   async createOrder(buyerId: number, data: CreateOrderDto) {
     const totalPrice = data.listings.reduce(
       (acc, listing) => acc + listing.price * listing.quantity,

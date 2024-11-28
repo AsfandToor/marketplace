@@ -60,6 +60,14 @@ export class OrdersController {
     );
   }
 
+  @Get('/metrics')
+  @Roles(Role.SELLER)
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
+  async getOrdersMetrics(@CurrentUser('id') sellerId: number) {
+    return this.ordersService.getOrderMetrics(sellerId);
+  }
+
   @Get(':id')
   @HttpCode(200)
   async getOrderById(@Param('id') id: string) {
