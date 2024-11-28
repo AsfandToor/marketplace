@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  role      Role
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  listings  Listing[] @relation("SellerListings")
+  orders    Order[]   @relation("BuyerOrders")
+
+  approval_listing Listing[] @relation("ApproverListings")
+  approval_order   Order[]   @relation("ApproverOrder")
+}
+
+model Listing {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  status      ListingStatus  @default(PENDING)
+  sellerId    Int
+  approverId  Int?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  seller      User           @relation("SellerListings", fields: [sellerId], references: [id])
+  approver    User?          @relation("ApproverListings", fields: [approverId], references: [id])
+  orders      OrderListing[]
+}
+
+model Order {
+  id         Int            @id @default(autoincrement())
+  status     OrderStatus    @default(PENDING)
+  totalPrice Float
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  buyerId    Int
+  buyer      User           @relation("BuyerOrders", fields: [buyerId], references: [id])
+  approverId Int?
+  approver   User?          @relation("ApproverOrder", fields: [approverId], references: [id])
+  listings   OrderListing[]
+}
+
+model OrderListing {
+  orderId   Int
+  listingId Int
+  quantity  Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([orderId, listingId])
+  @@unique([orderId, listingId])
+}
+
+enum Role {
+  BUYER
+  SELLER
+  APPROVER
+}
+
+enum ListingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
