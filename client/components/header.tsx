@@ -7,9 +7,14 @@ export function Header() {
       <Link href="/" className="text-2xl font-bold text-primary">
         Marketplace
       </Link>
-      <Button variant="outline" asChild>
-        <Link href="/signin">Sign In</Link>
-      </Button>
+      <div className='space-x-2'>
+        <Button variant="outline" asChild>
+          <Link href="/signin">Sign In</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/register">Register</Link>
+        </Button>
+      </div>
     </header>
   )
 }
