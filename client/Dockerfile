@@ -9,6 +9,9 @@ RUN npm install
 FROM base AS builder
 COPY . .
 COPY --from=dependencies ./app/node_modules ./node_modules
+ENV NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+ENV NEXT_PUBLIC_API_INTERNAL_URL=http://nestjs:3001
+ENV NEXTAUTH_SECRET=marketplace
 RUN npm run build
 
 

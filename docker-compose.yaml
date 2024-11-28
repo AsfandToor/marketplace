@@ -30,6 +30,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+    restart: always
 
   postgres:
     image: postgres:15-alpine

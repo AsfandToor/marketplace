@@ -14,6 +14,10 @@ FROM base AS builder
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
+ENV DATABASE_URL=postgresql://admin:admin123@postgres:5432/mydatabase?schema=public
+ENV RABBITMQ_URL=amqp://user:password@rabbitmq:5672
+ENV SALT_ROUNDS=10
+ENV JWT_SECRET=my-secret
 RUN npm run build
 
 
