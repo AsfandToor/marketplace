@@ -76,7 +76,8 @@ const Page = () => {
       setListingData(LISTING_DATA);
       mutate();
     } catch (error) {
-      setCreateListingError(error.message);
+      console.error(error);
+      setCreateListingError("Something went wrong. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }

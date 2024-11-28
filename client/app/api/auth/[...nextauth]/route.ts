@@ -11,22 +11,26 @@ const authOptions: NextAuthOptions = {
             },
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             async authorize(credentials, req) {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/signin`, {
-                    method: 'POST',
-                    body: JSON.stringify(credentials),
-                    headers: { "Content-Type": "application/json" },
-                });
-
-                const response = await res.json();
-
-                if (res.status === 401) {
-                    return null;
+                try {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_INTERNAL_URL}/auth/signin`, {
+                        method: 'POST',
+                        body: JSON.stringify(credentials),
+                        headers: { "Content-Type": "application/json" },
+                    });
+    
+                    const response = await res.json();
+    
+                    if (res.status === 401) {
+                        return null;
+                    }
+    
+                    if (res.ok && response) {
+                        return response;
+                    }
                 }
-
-                if (res.ok && response) {
-                    return response;
+                catch (error) {
+                    console.error(error);
                 }
-
                 return null;
             },
         }),

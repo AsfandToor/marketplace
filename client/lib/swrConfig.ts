@@ -5,7 +5,7 @@ import useSWRMutation, { SWRMutationResponse, SWRMutationConfiguration } from 's
 export const fetcher = async <T>(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' = 'GET',
-  data?: any
+  data?: T
 ): Promise<T> => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`, {
