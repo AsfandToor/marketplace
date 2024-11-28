@@ -11,31 +11,42 @@ jobs:
     name: Lint and Build Client and Server
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        app: [client, server]
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node.js for Client
         uses: actions/setup-node@v3
         with:
-          node-version: '23.1.0'
+          node-version: '18'
           cache: 'npm'
 
-      # Install dependencies
-      - name: Install dependencies
-        working-directory: './client'
+      - name: Install dependencies for Client
+        working-directory: ./client
         run: npm ci
 
-      # Run linter
-      - name: Run linter
-        working-directory: './client'
+      - name: Run linter for Client
+        working-directory: ./client
         run: npm run lint
 
-      # Build the app
-      - name: Build the app
-        working-directory: './client'
+      - name: Build Client
+        working-directory: ./client
+        run: npm run build
+
+      - name: Set up Node.js for Server
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies for Server
+        working-directory: ./server
+        run: npm ci
+
+      - name: Run linter for Server
+        working-directory: ./server
+        run: npm run lint
+
+      - name: Build Server
+        working-directory: ./server
         run: npm run build
