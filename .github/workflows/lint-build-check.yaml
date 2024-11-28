@@ -27,15 +27,15 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        working-directory: ${{ matrix.app }}
+        working-directory: './client'
         run: npm ci
 
       # Run linter
       - name: Run linter
-        working-directory: ${{ matrix.app }}
+        working-directory: './client'
         run: npm run lint
 
       # Build the app
       - name: Build the app
-        working-directory: ${{ matrix.app }}
+        working-directory: './client'
         run: npm run build
